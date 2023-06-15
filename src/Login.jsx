@@ -65,7 +65,7 @@ const Login = () => {
   </div>
 
   <div>
-    <a href="/registerstudent" target="_self" rel="noopener noreferrer">
+    <a href="/registerteacher" target="_self" rel="noopener noreferrer">
   <Button>Teacher</Button>
   </a>
   </div>
