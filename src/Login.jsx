@@ -6,7 +6,7 @@ import { useState } from "react";
 
 const Login = () => {
     const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+    const [password, setPassword] = useState("");
 
   useEffect(() => {
     async function hacerConsultaHTTP(params) {
@@ -15,7 +15,7 @@ const Login = () => {
     return () => {
         hacerConsultaHTTP()
     };
-  }, []);
+  }, []); //2do parametro arreglo de dependencias (el que cambie)
 
   function usernameHandler(event) {
     console.log(event.target.value);
@@ -58,8 +58,17 @@ const Login = () => {
           <Button>login</Button>
           <p>No account yet? Register as:</p>
           <ButtonGroup variant="contained" aria-label="outlined primary button group">
+  <div>
+    <a href="/registerstudent" target="_self" rel="noopener noreferrer">
   <Button>Student</Button>
+  </a>
+  </div>
+
+  <div>
+    <a href="/registerstudent" target="_self" rel="noopener noreferrer">
   <Button>Teacher</Button>
+  </a>
+  </div>
 </ButtonGroup>
         </Stack>
       </Box>
