@@ -22,9 +22,9 @@ class Student(db.Model):
     password: str
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(100), primary_key=False)
-    email = db.Column(db.String(100), primary_key=False)
-    password = db.Column(db.String(100), primary_key=False)
+    username = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), nullable=False)
+    password = db.Column(db.String(100), nullable=False)
     
     def __repr__(self):
         return f'<Student {self.id}>'
@@ -41,10 +41,10 @@ class Teacher(db.Model):
     expYears: int
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(100), primary_key=False)
-    email = db.Column(db.String(100), primary_key=False)
-    password = db.Column(db.String(100), primary_key=False)
-    expYears = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), nullable=False)
+    password = db.Column(db.String(100), nullable=False)
+    expYears = db.Column(db.Integer, nullable=True)
 
     def __repr__(self):
         return f'<Teacher {self.id}>'
