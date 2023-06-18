@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import {  Box, Button, Stack, TextField } from "@mui/material";
 
-const profesor =() =>{
+const Teacher =() =>{
     return(
         <Box 
           className="App"
@@ -23,4 +23,4 @@ const profesor =() =>{
     </Box>);
 };
 
-export default Cursos;
+export default Teacher;

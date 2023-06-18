@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from flask import Flask, jsonify, request, render_template, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import ForeignKey
+from datetime import date
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -39,12 +41,14 @@ class Teacher(db.Model):
     email: str
     password: str
     expYears: int
+    course: str
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False)
     password = db.Column(db.String(100), nullable=False)
     expYears = db.Column(db.Integer, nullable=True)
+    course = db.Column(db.String(100), nullable=False)
 
     def __repr__(self):
         return f'<Teacher {self.id}>'
@@ -53,12 +57,24 @@ class Teacher(db.Model):
         return self.password == password
 
 @dataclass
-class Course(db.Model):
+class Taught(db.Model):
 
-    name = db.Column(db.String(100), primary_key=True)
-    
+    fecha: date
+    url: str
+    check: bool
+    studentName: str
+    teacherName: str
+    teacherCourse: str
+
+    fecha = db.Column(db.DateTime, primary_key=True)
+    url = db.Column(db.String(100), nullable=False)
+    check = db.Column(db.Boolean, nullable=False)
+    studentName = db.Column(db.String(100), ForeignKey("Student.username"),nullable=False)
+    teacherName = db.Column(db.String(100), ForeignKey("Teacher.username"),nullable=False)
+    teacherCourse = db.Column(db.String(100), ForeignKey("Teacher.course"),nullable=False)
+
     def __repr__(self):
-        return f'<Course {self.name}>'
+        return f'<Taught {self.name}>'
     
 
 with app.app_context():
