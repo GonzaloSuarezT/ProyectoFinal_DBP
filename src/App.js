@@ -1,13 +1,13 @@
 //import logo from './logo.svg';
 import './App.css';
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import Login from "./Login";
-import Home from "./Home";
-import RegisterStudent from "./RegStudent"
-import RegisterTeacher from "./RegTeacher"
-import Cursos from "./cursos"
-import Teacher from "./Profesor"
-import Profesores from "./profesores"
+import Login from "./components/Login";
+import Home from "./components/Home";
+import RegisterStudent from "./components/RegStudent"
+import RegisterTeacher from "./components/RegTeacher"
+import Cursos from "./components/cursos"
+import Teacher from "./components/Profesor"
+import Profesores from "./components/profesores"
 
 function App() {
   return (
