@@ -41,6 +41,12 @@ const RegisterTeacher = () => {
             label="Course"
             variant="outlined"
           />
+          <h3>Experience years:</h3>
+          <TextField
+            id="outlined-basic"
+            label="Course"
+            variant="outlined"
+          />
           <h3>Submit profile pic:</h3>
           <Button>Upload...</Button>
           <Button variant="contained">Register</Button>
