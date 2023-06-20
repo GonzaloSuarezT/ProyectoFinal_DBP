@@ -80,5 +80,16 @@ class Taught(db.Model):
 with app.app_context():
     db.create_all()
 
+@app.route('/students/add', methods=['POST'])
+def route_add_student():
+    student = request.get_json()
+    return insert_student(student)
+
+
+def insert_student(data):
+    student = Student(username=data["username"], email=data["email"], password=data["password"])
+    db.session.add(student)
+    db.session.commit()
+    return "SUCCESS"
 
 #Terminal: python -m flask --app colors_server.py run

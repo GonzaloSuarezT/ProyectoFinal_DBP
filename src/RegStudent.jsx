@@ -1,8 +1,33 @@
 import React, { useEffect } from 'react';
 import {  Box, Button, Stack, TextField } from "@mui/material";
-//import { useState } from "react";
+import { useState } from "react";
 
 const RegisterStudent = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+
+  useEffect(() => {
+    async function hacerConsultaHTTP(params) {
+        await fetch("www.google.com");
+    }
+    return () => {
+        hacerConsultaHTTP()
+    };
+  }, []);
+
+  function usernameHandler(event) {
+    setUsername(event.target.value);
+  }
+
+  function emailHandler(event) {
+    setEmail(event.target.value);
+  }
+
+  const passwordHandler = (event) => {
+    setPassword(event.target.value);
+  };
+  
     return (
         <Box 
           className="App"
@@ -20,6 +45,7 @@ const RegisterStudent = () => {
             id="outlined-basic"
             label="User"
             variant="outlined"
+            onChange={usernameHandler}
           />
           <h3>Email:</h3>
           <TextField
@@ -27,6 +53,7 @@ const RegisterStudent = () => {
             label="Email"
             variant="outlined"
             type={"email"}
+            onChange={emailHandler}
           />
           <h3>Password:</h3>
           <TextField
@@ -34,6 +61,7 @@ const RegisterStudent = () => {
             label="Password"
             variant="outlined"
             type={"password"}
+            onChange={passwordHandler}
           />
           <h3>Submit profile pic:</h3>
           <Button>Upload...</Button>
