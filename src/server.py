@@ -34,6 +34,18 @@ class Student(db.Model):
     def check_password(self,password):
         return self.password == password
 
+
+@app.route('/registerstudent',methods=['POST'])
+def stundent_register():
+    if request.method=='POST':
+        data=request.get_json()
+        student=Student(id=data["id"],username=data["username"],email=data["email"],password=data["password"])
+        db.session.add(student)
+        db.session.commit()
+        return "Estudiante registrado correctamente"
+
+
+
 @dataclass
 class Teacher(db.Model):
     id: int
@@ -55,6 +67,15 @@ class Teacher(db.Model):
     
     def check_password(self,password):
         return self.password == password
+    
+@app.route('/registerteacher',methods=['POST'])
+def teacher_register():
+    if request.method=='POST':
+        data=request.get_json()
+        teacher=Teacher(id=data["id"],username=data["username"],email=data["email"],password=data["password"],expYears=data["expYears"],course=data["course"])
+        db.session.add(teacher)
+        db.session.commit()
+        return "Profesor registrado correctamente"
 
 @dataclass
 class Taught(db.Model):
@@ -76,20 +97,51 @@ class Taught(db.Model):
     def __repr__(self):
         return f'<Taught {self.name}>'
     
+@app.route('/profesor',methods="POST")
+def publicar_clase():
+    if request.method=="POST":
+        data = request.get_json()
+        clase = Taught(fecha = data["fecha"], url = data["url"],check = data["check"],studentName = data["studentName"],teacherName=data["teacherName"],teacherCourse=data["teacherCourse"])
+        db.session.add(clase)
+        db.session.commit()
+        return "Clase registrada correctamente"
 
 with app.app_context():
     db.create_all()
 
-@app.route('/students/add', methods=['POST'])
-def route_add_student():
-    student = request.get_json()
-    return insert_student(student)
 
+@app.route('/profesores',methods="GET")
+def mostrar_profes():
+    if request.method=="GET":
+        data=request.get_json()
+        curso=data["Curso"]
+        todos_profesores=Teacher.query.all()
+        #profesores= ?
+        for profesor in todos_profesores:
+            if profesor.course==curso:
+                #add profesor a profesores
+        #return profesores
 
-def insert_student(data):
-    student = Student(username=data["username"], email=data["email"], password=data["password"])
-    db.session.add(student)
-    db.session.commit()
-    return "SUCCESS"
-
+@app.route("/teacher",methods="GET")
+def mostrar_clases():
+    if request.method=="GET":
+        data=request.get_json()
+        profesor=data[""]
+        clases_all=Taught.query.all()
+        #clases_profesor= ?
+        for clases in clases_all:
+            if clases.teacherName == profesor:
+                #add clases a clases_profesor
+    
+    
+def actualizar_clase():
+    if request.method=="PUT":
+        data=request.get_json()
+        update = data["check"]
+        clase=Taught.query.get_or_404(data["id"])
+        clase.check=update
+        db.session.commit()
+    return "clase actualizada"
+            
+    
 #Terminal: python -m flask --app colors_server.py run
