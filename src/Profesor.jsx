@@ -17,7 +17,7 @@ const Teacher =() =>{
             label="URL Google Meets"
             variant="outlined"
           />
-    <a href="/" target="_self" rel="noopener noreferrer">
+    <a href="/cursos" target="_self" rel="noopener noreferrer">
         <Button>Reservar</Button>
     </a>
     </Box>);

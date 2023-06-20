@@ -14,12 +14,12 @@ const Profesores =() =>{
 
         <ButtonGroup variant="contained" aria-label="outlined primary button group">
         <div>
-            <a href="/" target="_self" rel="noopener noreferrer">
+            <a href="/teacher" target="_self" rel="noopener noreferrer">
                 <Button>Profesor1</Button>
             </a>
         </div>
         <div>
-            <a href="/" target="_self" rel="noopener noreferrer">
+            <a href="/teacher" target="_self" rel="noopener noreferrer">
                 <Button>Profesor2</Button>
             </a>
         </div>
@@ -27,12 +27,12 @@ const Profesores =() =>{
 
         <ButtonGroup variant="contained" aria-label="outlined primary button group">
         <div>
-            <a href="/" target="_self" rel="noopener noreferrer">
+            <a href="/teacher" target="_self" rel="noopener noreferrer">
                 <Button>Profesor3</Button>
             </a>
         </div>
         <div>
-            <a href="/" target="_self" rel="noopener noreferrer">
+            <a href="/teacher" target="_self" rel="noopener noreferrer">
                 <Button>Profesor4</Button>
             </a>
         </div>
@@ -40,12 +40,12 @@ const Profesores =() =>{
 
         <ButtonGroup variant="contained" aria-label="outlined primary button group">
         <div>
-            <a href="/" target="_self" rel="noopener noreferrer">
+            <a href="/teacher" target="_self" rel="noopener noreferrer">
                 <Button>Profesor5</Button>
             </a>
         </div>
         <div>
-            <a href="/" target="_self" rel="noopener noreferrer">
+            <a href="/teacher" target="_self" rel="noopener noreferrer">
                 <Button>Profesor6</Button>
             </a>
         </div>
