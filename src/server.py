@@ -116,7 +116,7 @@ def insert_student(data):
     db.session.add(student)
     db.session.commit()
     return "SUCCESS"
-
+    
 def insert_teacher(data):
     teacher = Student(username=data["username"], email=data["email"], password=data["password"], expYears=data["expYears"], course=data["course"])
     db.session.add(teacher)

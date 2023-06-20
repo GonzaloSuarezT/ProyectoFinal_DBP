@@ -59,13 +59,13 @@ const Login = () => {
           <p>No account yet? Register as:</p>
           <ButtonGroup variant="contained" aria-label="outlined primary button group">
   <div>
-    <a href="/registerstudent" target="_self" rel="noopener noreferrer">
+    <a href="/registerstudent" target="_self" rel="origin">
   <Button>Student</Button>
   </a>
   </div>
 
   <div>
-    <a href="/registerteacher" target="_self" rel="noopener noreferrer">
+    <a href="/registerteacher" target="_self" rel="origin">
   <Button>Teacher</Button>
   </a>
   </div>

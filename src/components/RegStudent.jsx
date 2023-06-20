@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import {  Box, Button, Stack, TextField } from "@mui/material";
+import {  Box, Button, ButtonGroup ,Stack, TextField } from "@mui/material";
 import { useState } from "react";
 
 const RegisterStudent = () => {
@@ -65,7 +65,11 @@ const RegisterStudent = () => {
           />
           <h3>Submit profile pic:</h3>
           <Button>Upload...</Button>
+          <div>
+    <a href="/cursos" target="_self" rel="noopener noreferrer">
           <Button variant="contained">Register</Button>
+          </a>
+          </div>
         </Stack>
       </Box>
     );
