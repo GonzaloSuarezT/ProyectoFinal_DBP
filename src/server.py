@@ -66,11 +66,11 @@ class Taught(db.Model):
     teacherName: str
     teacherCourse: str
 
-    fecha = db.Column(db.DateTime, primary_key=True)
+    fecha = db.Column(db.DateTime, nullable=False)
     url = db.Column(db.String(100), nullable=False)
     check = db.Column(db.Boolean, nullable=False)
-    studentName = db.Column(db.String(100), ForeignKey("Student.username"),nullable=False)
-    teacherName = db.Column(db.String(100), ForeignKey("Teacher.username"),nullable=False)
+    studentName = db.Column(db.String(100), ForeignKey("Student.username"), primary_key=True, nullable=False)
+    teacherName = db.Column(db.String(100), ForeignKey("Teacher.username"), primary_key=True, nullable=False)
     teacherCourse = db.Column(db.String(100), ForeignKey("Teacher.course"),nullable=False)
 
     def __repr__(self):
@@ -101,6 +101,16 @@ def route_get_teacher_by_course(teacher_course):
     teacher = Teacher.query.get_or_404(teacher_course)
     return jsonify(teacher)
 
+@app.route('/taught/<student_name>', methods=['GET','PUT','DELETE'])
+def route_clase_student_name(student_name):
+    if request.method == 'GET':
+        return get_clase_by_name(student_name)
+    elif request.method == 'PUT':
+        clase = request.get_json()
+        return update_clase(student_name, clase)
+    elif request.method == 'DELETE':
+        return delete_clase(student_name)
+
 def insert_student(data):
     student = Student(username=data["username"], email=data["email"], password=data["password"])
     db.session.add(student)
@@ -118,6 +128,23 @@ def insert_clase(data):
     db.session.add(clase)
     db.session.commit()
     return "SUCCESS"
+
+def get_clase_by_name(student_name):
+    # Player.query.filter_by(id=3).first()
+    clase = Taught.query.get_or_404(student_name)
+    return jsonify(clase)
+
+def update_clase(student_name, new_clase):
+    clase = Taught.query.get_or_404(student_name)
+    clase.check = new_clase["check"]
+    db.session.commit()
+    return 'SUCCESS'
+
+def delete_clase(student_name):
+    clase = Taught.query.get_or_404(student_name)
+    db.session.delete(clase)
+    db.session.commit()
+    return 'SUCCESS'
 
 """
 
