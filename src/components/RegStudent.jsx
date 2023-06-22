@@ -8,13 +8,35 @@ const RegisterStudent = () => {
   const [email, setEmail] = useState("");
 
   useEffect(() => {
+    fetch('http://127.0.0.1:5000/students', {
+        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        mode: 'cors', // no-cors, *cors, same-origin
+        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: 'same-origin', // include, *same-origin, omit
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        redirect: 'follow', // manual, *follow, error
+        referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+        body: JSON.stringify({ username : {username}, email:{email}, password:{password} }) // body data type must match "Content-Type" header
+      })
+      .then(response => response.json())
+      .then(data => 
+        {
+          setUsername(data.username);
+          setEmail(data.email);
+          setPassword(data.password)
+        })
+
     async function hacerConsultaHTTP(params) {
         await fetch("www.google.com");
     }
     return () => {
         hacerConsultaHTTP()
     };
-  }, []);
+
+    
+  }, [username,email,password]);
 
   function usernameHandler(event) {
     setUsername(event.target.value);

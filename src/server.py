@@ -69,9 +69,9 @@ class Taught(db.Model):
     fecha = db.Column(db.DateTime, nullable=False)
     url = db.Column(db.String(100), nullable=False)
     check = db.Column(db.Boolean, nullable=False)
-    studentName = db.Column(db.String(100), ForeignKey("Student.username"), primary_key=True, nullable=False)
-    teacherName = db.Column(db.String(100), ForeignKey("Teacher.username"), primary_key=True, nullable=False)
-    teacherCourse = db.Column(db.String(100), ForeignKey("Teacher.course"),nullable=False)
+    studentName = db.Column(db.String(100), primary_key=True, nullable=False)
+    teacherName = db.Column(db.String(100), primary_key=True, nullable=False)
+    teacherCourse = db.Column(db.String(100),nullable=False)
 
     def __repr__(self):
         return f'<Taught {self.name}>'
@@ -81,10 +81,13 @@ with app.app_context():
     
     #Routes
 
-@app.route('/students/add', methods=['POST'])
+@app.route('/students', methods=['POST','GET'])
 def route_add_student():
-    student = request.get_json()
-    return insert_student(student)
+    if request.method == 'GET':
+        return get_students()
+    elif request.method == 'POST':
+        student = request.get_json()
+        return insert_student(student)
 
 @app.route('/teachers/add', methods=['POST'])
 def route_add_teacher():
@@ -145,6 +148,10 @@ def delete_clase(student_name):
     db.session.delete(clase)
     db.session.commit()
     return 'SUCCESS'
+
+def get_students():
+    students = Student.query.all()
+    return jsonify(students)
 
 """
 
