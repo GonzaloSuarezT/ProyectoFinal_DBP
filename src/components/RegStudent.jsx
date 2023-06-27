@@ -18,7 +18,7 @@ const RegisterStudent = () => {
         },
         redirect: 'follow', // manual, *follow, error
         referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-        body: JSON.stringify({ username : {username}, email:{email}, password:{password} }) // body data type must match "Content-Type" header
+        body: JSON.stringify({ username : username, email:email, password:password}) // body data type must match "Content-Type" header
       })
       .then(response => response.json())
       .then(data => 
@@ -27,16 +27,18 @@ const RegisterStudent = () => {
           setEmail(data.email);
           setPassword(data.password)
         })
-
+    
+    /*
     async function hacerConsultaHTTP(params) {
         await fetch("www.google.com");
     }
     return () => {
         hacerConsultaHTTP()
     };
-
+*/
     
   }, [username,email,password]);
+
 
   function usernameHandler(event) {
     setUsername(event.target.value);
@@ -62,25 +64,30 @@ const RegisterStudent = () => {
           <h1>Student</h1>
           <p>Ready to learn?</p>
           <h2>Register</h2>
+          <form>
           <h3>Username:</h3>
           <TextField
             id="outlined-basic"
+            name='username'
             label="User"
             variant="outlined"
+            
             onChange={usernameHandler}
           />
           <h3>Email:</h3>
           <TextField
             id="outlined-basic2"
             label="Email"
+            name='email'
             variant="outlined"
             type={"email"}
             onChange={emailHandler}
           />
           <h3>Password:</h3>
           <TextField
-            id="outlined-basic2"
+            id="outlined-basic3"
             label="Password"
+            name='password'
             variant="outlined"
             type={"password"}
             onChange={passwordHandler}
@@ -89,9 +96,10 @@ const RegisterStudent = () => {
           <Button>Upload...</Button>
           <div>
     <a href="/cursos" target="_self" rel="noopener noreferrer">
-          <Button variant="contained">Register</Button>
+          <Button type="submit" variant="contained">Register</Button>
           </a>
           </div>
+          </form>
         </Stack>
       </Box>
     );

@@ -89,6 +89,16 @@ def route_add_student():
         student = request.get_json()
         return insert_student(student)
 
+@app.route('/students/delete/<student_id>', methods=['GET', 'DELETE'])
+def route_delete_student(student_id):
+    return delete_student(student_id)
+
+def delete_student(student_id):
+    student = Student.query.get_or_404(student_id)
+    db.session.delete(student)
+    db.session.commit()
+    return 'SUCCESS'
+
 @app.route('/teachers/add', methods=['POST'])
 def route_add_teacher():
     teacher = request.get_json()
