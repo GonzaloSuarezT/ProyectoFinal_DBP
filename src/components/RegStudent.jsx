@@ -1,32 +1,36 @@
 import React, { useEffect } from 'react';
 import {  Box, Button, ButtonGroup ,Stack, TextField } from "@mui/material";
 import { useState } from "react";
+import axios from "axios";
 
 const RegisterStudent = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
 
-  useEffect(() => {
-    fetch('http://127.0.0.1:5000/students', {
-        method: 'POST', // *GET, POST, PUT, DELETE, etc.
-        mode: 'cors', // no-cors, *cors, same-origin
-        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-        credentials: 'same-origin', // include, *same-origin, omit
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        redirect: 'follow', // manual, *follow, error
-        referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-        body: JSON.stringify({ username : username, email:email, password:password}) // body data type must match "Content-Type" header
-      })
-      .then(response => response.json())
-      .then(data => 
-        {
-          setUsername(data.username);
-          setEmail(data.email);
-          setPassword(data.password)
-        })
+const [data, setData] = useState({
+  username: "",
+  password: "",
+  email:""
+});
+
+const handleChange = (e) => {
+  const value = e.target.value;
+  setData({
+    ...data,
+    [e.target.name]: value
+  });
+};
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const userData = {
+      username: data.username,
+      password: data.password,
+      email: data.email
+    };
+    axios.post("http://127.0.0.1:5000/students", userData).then((response) => {
+      console.log(response.status, response.data.token);
+    });
+    window.location.href = "/cursos";
+  };
     
     /*
     async function hacerConsultaHTTP(params) {
@@ -36,10 +40,8 @@ const RegisterStudent = () => {
         hacerConsultaHTTP()
     };
 */
-    
-  }, [username,email,password]);
 
-
+/*
   function usernameHandler(event) {
     setUsername(event.target.value);
   }
@@ -51,7 +53,7 @@ const RegisterStudent = () => {
   const passwordHandler = (event) => {
     setPassword(event.target.value);
   };
-  
+  */
     return (
         <Box 
           className="App"
@@ -64,15 +66,15 @@ const RegisterStudent = () => {
           <h1>Student</h1>
           <p>Ready to learn?</p>
           <h2>Register</h2>
-          <form>
+          <form onSubmit={handleSubmit}>
           <h3>Username:</h3>
           <TextField
             id="outlined-basic"
             name='username'
             label="User"
             variant="outlined"
-            
-            onChange={usernameHandler}
+            value={data.username}
+            onChange={handleChange}
           />
           <h3>Email:</h3>
           <TextField
@@ -81,7 +83,8 @@ const RegisterStudent = () => {
             name='email'
             variant="outlined"
             type={"email"}
-            onChange={emailHandler}
+            value={data.email}
+            onChange={handleChange}
           />
           <h3>Password:</h3>
           <TextField
@@ -90,12 +93,11 @@ const RegisterStudent = () => {
             name='password'
             variant="outlined"
             type={"password"}
-            onChange={passwordHandler}
+            value={data.password}
+            onChange={handleChange}
           />
-          <h3>Submit profile pic:</h3>
-          <Button>Upload...</Button>
           <div>
-    <a href="/cursos" target="_self" rel="noopener noreferrer">
+          <a href="/cursos" target="_self" rel="noopener noreferrer">
           <Button type="submit" variant="contained">Register</Button>
           </a>
           </div>
