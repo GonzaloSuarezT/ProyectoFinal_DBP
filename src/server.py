@@ -111,7 +111,7 @@ def route_add_clase():
 
 @app.route('/teachers/<teacher_course>', methods=['GET'])
 def route_get_teacher_by_course(teacher_course):
-    teacher = Teacher.query.get_or_404(teacher_course)
+    teacher = Teacher.query.filter_by(course=teacher_course).all()
     return jsonify(teacher)
 
 @app.route('/taught/<student_name>', methods=['GET','PUT','DELETE'])
@@ -131,7 +131,7 @@ def insert_student(data):
     return "SUCCESS"
     
 def insert_teacher(data):
-    teacher = Student(username=data["username"], email=data["email"], password=data["password"], expYears=data["expYears"], course=data["course"])
+    teacher = Teacher(username=data["username"], email=data["email"], password=data["password"], expYears=data["expYears"], course=data["course"])
     db.session.add(teacher)
     db.session.commit()
     return "SUCCESS"
