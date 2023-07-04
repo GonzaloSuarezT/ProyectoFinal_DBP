@@ -1,30 +1,45 @@
 import React, { useEffect } from 'react';
 import {  Box, Button, ButtonGroup, Stack, TextField } from "@mui/material";
 import { useState } from "react";
+import axios from "axios";
 
-
+var isStudent=true;
 
 const Login = () => {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-
-  useEffect(() => {
-    async function hacerConsultaHTTP(params) {
-        await fetch("www.google.com");
-    }
-    return () => {
-        hacerConsultaHTTP()
-    };
-  }, []); //2do parametro arreglo de dependencias (el que cambie)
-
-  function usernameHandler(event) {
-    console.log(event.target.value);
-    setUsername(event.target.value);
-  }
-
-  const passwordHandler = (event) => {
-    setPassword(event.target.value);
+  const [data, setData] = useState({
+    username: "",
+    password: ""
+  });
+  
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setData({
+      ...data,
+      [e.target.name]: value
+    });
   };
+  
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      const userData = {
+        username: data.username,
+        password: data.password
+      };
+
+      axios.get(`http://127.0.0.1:5000/students/get/${userData.username}`)
+      .then((response) => {
+        //console.log(response.status, response.data.token);
+        //window.location.href = "/cursos";
+        setData(response.data);
+        alert(response.username);
+      }).catch((err) => {
+        
+     })
+     
+      ;
+      
+
+    };
 
 
     return (
@@ -38,24 +53,35 @@ const Login = () => {
         <Stack spacing={4} width={200}>
           <h1>Megaprof</h1>
           <h2>Login</h2>
-          <h3>User:{username}</h3>
+          <p>As:</p>
+      
+          
+
+          <form onSubmit={handleSubmit}>
+          <h3>Username:</h3>
           
           <TextField
             id="outlined-basic"
+            name='username'
             label="User"
             variant="outlined"
-            onChange={usernameHandler}
+            value={data.username}
+            onChange={handleChange}
           />
-          <h3>Password:{password}</h3>
+          <h3>Password:</h3>
           <TextField
-            id="outlined-basic2"
+            id="outlined-basic3"
             label="Password"
+            name='password'
             variant="outlined"
-            onChange={passwordHandler}
             type={"password"}
+            value={data.password}
+            onChange={handleChange}
           />
   
-          <Button>login</Button>
+          <Button type="submit">login</Button>
+          </form>
+
           <p>No account yet? Register as:</p>
           <ButtonGroup variant="contained" aria-label="outlined primary button group">
   <div>

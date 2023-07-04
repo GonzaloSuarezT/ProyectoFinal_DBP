@@ -99,6 +99,16 @@ def delete_student(student_id):
     db.session.commit()
     return 'SUCCESS'
 
+@app.route('/students/get/<student_name>', methods=['GET'])
+def route_get_students_by_name(student_name):
+    student = Student.query.filter_by(username=student_name).all()
+    return jsonify(student)
+
+@app.route('/teachers/get/<teacher_name>', methods=['GET'])
+def route_get_teachers_by_name(teacher_name):
+    teacher = Teacher.query.filter_by(username=teacher_name).all()
+    return jsonify(teacher)
+
 @app.route('/teachers/add', methods=['POST'])
 def route_add_teacher():
     teacher = request.get_json()
