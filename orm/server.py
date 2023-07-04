@@ -109,10 +109,13 @@ def route_get_teachers_by_name(teacher_name):
     teacher = Teacher.query.filter_by(username=teacher_name).all()
     return jsonify(teacher)
 
-@app.route('/teachers/add', methods=['POST'])
+@app.route('/teachers', methods=['GET','POST'])
 def route_add_teacher():
-    teacher = request.get_json()
-    return insert_teacher(teacher)
+    if request.method == 'GET':
+        return get_teachers()
+    elif request.method == 'POST':
+        teacher = request.get_json()
+        return insert_teacher(teacher)
 
 @app.route('/taught/add', methods=['POST'])
 def route_add_clase():
@@ -172,6 +175,10 @@ def delete_clase(student_name):
 def get_students():
     students = Student.query.all()
     return jsonify(students)
+
+def get_teachers():
+    teachers = Teacher.query.all()
+    return jsonify(teachers)
 
 """
 
