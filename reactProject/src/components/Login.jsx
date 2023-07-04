@@ -1,14 +1,16 @@
 import React, { useEffect } from 'react';
-import {  Box, Button, ButtonGroup, Stack, TextField } from "@mui/material";
+import {  Box, Button, ButtonGroup, Stack, TextField, MenuItem } from "@mui/material";
 import { useState } from "react";
 import axios from "axios";
 
-var isStudent=true;
+
 
 const Login = () => {
+
   const [data, setData] = useState({
     username: "",
-    password: ""
+    password: "",
+    email:""
   });
   
   const handleChange = (e) => {
@@ -26,18 +28,29 @@ const Login = () => {
         password: data.password
       };
 
-      axios.get(`http://127.0.0.1:5000/students/get/${userData.username}`)
-      .then((response) => {
-        //console.log(response.status, response.data.token);
-        //window.location.href = "/cursos";
-        setData(response.data);
-        alert(response.username);
-      }).catch((err) => {
-        
-     })
-     
-      ;
-      
+
+      const getStudentData = () => {
+        axios
+            .get(`http://127.0.0.1:5000/students/get/${userData.username}`)
+            .then(data => 
+              {
+                console.log(data.data);
+                if ( ((data.data).at(0)).password === userData.password){
+                  window.location.href = "/cursos";
+                }
+                else{
+                  alert("Invalid password");
+                }
+              }
+              )
+            .catch(error => {
+              console.log(error);
+              alert("User not found");
+            });
+    };
+      getStudentData();
+    
+
 
     };
 
@@ -54,7 +67,7 @@ const Login = () => {
           <h1>Megaprof</h1>
           <h2>Login</h2>
           <p>As:</p>
-      
+          
           
 
           <form onSubmit={handleSubmit}>
