@@ -20,7 +20,6 @@ const Login = () => {
 
   function flagHandler(event) {
     setFlag(event.target.value);
-    console.log(flag);
   }
 
   const [data, setData] = useState({
