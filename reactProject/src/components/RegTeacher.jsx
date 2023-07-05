@@ -57,10 +57,10 @@ const RegisterTeacher = () => {
         expYears: data.expYears,
         course: data.course
       };
-      axios.post("http://127.0.0.1:5000/teachers/add", userData).then((response) => {
+      axios.post("http://127.0.0.1:5000/teachers", userData).then((response) => {
         console.log(response.status, response.data.token);
       });
-      window.location.href = "/cursos";
+      window.location.href = "/menu_teacher";
     };
 
     return (

@@ -3,9 +3,25 @@ import {  Box, Button, ButtonGroup, Stack, TextField, MenuItem } from "@mui/mate
 import { useState } from "react";
 import axios from "axios";
 
-
+const options = [
+  {
+    value: true,
+    label: 'Student',
+  },
+  {
+    value: false,
+    label: 'Teacher',
+  }
+];
 
 const Login = () => {
+
+  const [flag, setFlag] = useState(true);
+
+  function flagHandler(event) {
+    setFlag(event.target.value);
+    console.log(flag);
+  }
 
   const [data, setData] = useState({
     username: "",
@@ -48,9 +64,33 @@ const Login = () => {
               alert("User not found");
             });
     };
-      getStudentData();
-    
 
+    const getTeacherData = () => {
+      axios
+          .get(`http://127.0.0.1:5000/teachers/get/${userData.username}`)
+          .then(data => 
+            {
+              console.log(data.data);
+              if ( ((data.data).at(0)).password === userData.password){
+                window.location.href = "/menu_teacher";
+              }
+              else{
+                alert("Invalid password");
+              }
+            }
+            )
+          .catch(error => {
+            console.log(error);
+            alert("User not found");
+          });
+  };
+
+    if(flag){
+      getStudentData();
+    }
+    else{
+      getTeacherData();
+    }
 
     };
 
@@ -68,7 +108,21 @@ const Login = () => {
           <h2>Login</h2>
           <p>As:</p>
           
-          
+          <TextField
+          id="outlined-select-option"
+          select
+          label="Select"
+          name='options'
+          helperText="Student/Teacher"
+          value={flag}
+          onChange={flagHandler}
+        >
+          {options.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>
 
           <form onSubmit={handleSubmit}>
           <h3>Username:</h3>

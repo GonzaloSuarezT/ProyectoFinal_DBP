@@ -11,17 +11,17 @@ const Cursos =() =>{
           minHeight="100vh"
         >
 
-        <h1>Seleeciona un curso</h1>
+        <h1>Choose your subject:</h1>
 
         <ButtonGroup variant="contained" aria-label="outlined primary button group">
             <div className='contenedor'>
                 <a href="/teachers" target="_self" rel="noopener noreferrer">
-                    <Button>Curso1</Button>
+                    <Button>Maths</Button>
                 </a>
             </div>
             <div>
                 <a href="/teachers" target="_self" rel="noopener noreferrer">
-                    <Button>Curso2</Button>
+                    <Button>Literature</Button>
                 </a>
             </div>
         </ButtonGroup>
@@ -29,12 +29,12 @@ const Cursos =() =>{
         <ButtonGroup variant="contained" aria-label="outlined primary button group">
         <div>
             <a href="/teachers" target="_self" rel="noopener noreferrer">
-                <Button>Curso3</Button>
+                <Button>History</Button>
             </a>
         </div>
         <div>
             <a href="/teachers" target="_self" rel="noopener noreferrer">
-                <Button>Curso4</Button>
+                <Button>Chemistry</Button>
             </a>
         </div>
         </ButtonGroup>
@@ -42,12 +42,12 @@ const Cursos =() =>{
         <ButtonGroup variant="contained" aria-label="outlined primary button group">
         <div>
             <a href="/teachers" target="_self" rel="noopener noreferrer">
-                <Button>Curso5</Button>
+                <Button>Physics</Button>
             </a>
         </div>
         <div>
             <a href="/teachers" target="_self" rel="noopener noreferrer">
-                <Button>Curso6</Button>
+                <Button>Geography</Button>
             </a>
         </div>
         </ButtonGroup>
