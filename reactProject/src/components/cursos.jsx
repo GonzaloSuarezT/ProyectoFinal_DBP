@@ -16,7 +16,59 @@ const App = () => {
 
 const Cursos =() =>{
   const [selectedCourse, setSelectedCourse] = useState(null);
-  
+
+  const [data, setData] = useState({
+    fecha: "",
+    url: "",
+    check:false,
+    studentName:"",
+    teacherName:"",
+    teacherCourse:""
+  });
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setData({
+      ...data,
+      [e.target.name]: value
+    });
+  };
+
+  const [selectionModel, setSelectionModel] = useState([]);
+
+  const handleSelectionModelChange = (newSelectionModel) => {
+    setSelectionModel(newSelectionModel);
+  };
+
+  const handleSubmit = (e) => {
+    if (e) {
+      e.preventDefault();
+    }
+
+    const selectedRowId = selectionModel[0]; // Suponemos que solo se permite seleccionar una fila
+
+    if (selectedRowId != null) {
+      const selectedRow = rows.find((row) => row.id === selectedRowId);
+
+      const userData = {
+        fecha: data.fecha,
+        url: data.url,
+        studentName: data.studentName,
+        check: true,
+        teacherName: selectedRow.username,
+        teacherCourse: selectedRow.course,
+      };
+
+      axios.post("http://127.0.0.1:5000/taught", userData).then((response) => {
+        console.log(response.status, response.data.token);
+      });
+      alert("Registered!");
+    } else {
+      console.log(selectedRowId)
+      alert("Please select a teacher.");
+    }
+  };
+
     function courseHandler(event) {
       const selectedCourse = event.target.value;
       setSelectedCourse(selectedCourse);
@@ -44,8 +96,9 @@ async function getData(course) {
       .get(`http://127.0.0.1:5000/teachers/${course}`)
       .then((response) => {
         setServerData(response.data);
-        fillRows(); // Agregar esta línea para llamar a fillRows() después de establecer los datos del servidor
+        fillRows(); 
         setLoadingData(false);
+        handleSubmit();
       });
 }
 
@@ -98,33 +151,49 @@ async function getData(course) {
       {loadingData ? (
         <p>Loading Please Wait...</p>
       ) : (
-        <DataGrid rows={rows} columns={columns} checkboxSelection/>
+        <DataGrid
+      rows={rows}
+      columns={columns}
+      checkboxSelection
+      selectionModel={selectionModel}
+      onSelectionModelChange={handleSelectionModelChange}
+    />
       )}
       {console.log("Server Data:")}
       {console.log(serverData)}
       {console.log("Rows:")}
       {console.log(rows)}
     </>
+    <form onSubmit={handleSubmit}>
     <h3>Set date</h3>
-    <table></table>
     <TextField
             id="outlined-basic"
+            name='fecha'
             variant="outlined"
             type={"date"}
+            value={data.fecha}
+            onChange={handleChange}
           />
           <h3>Send link</h3>
         <TextField
             id="outlined-basic1"
+            name='url'
             label="URL Google Meets"
             variant="outlined"
+            value={data.url}
+            onChange={handleChange}
           />
           <h3>Confirm username</h3>
         <TextField
             id="outlined-basic2"
+            name='studentName'
             label="username"
             variant="outlined"
+            value={data.studentName}
+            onChange={handleChange}
           />
-        <Button>Reservar</Button>
+        <Button type="submit">Reservar</Button>
+        </form>
         </Stack>
     </Box>
     );

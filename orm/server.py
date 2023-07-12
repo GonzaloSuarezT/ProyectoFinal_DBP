@@ -117,10 +117,14 @@ def route_add_teacher():
         teacher = request.get_json()
         return insert_teacher(teacher)
 
-@app.route('/taught/add', methods=['POST'])
+@app.route('/taught', methods=['GET','POST'])
 def route_add_clase():
-    clase = request.get_json()
-    return insert_clase(clase)
+    if request.method == 'GET':
+        taught = Taught.query.all()
+        return jsonify(taught)
+    elif request.method == 'POST':
+        clase = request.get_json()
+        return insert_clase(clase)
 
 @app.route('/teachers/<teacher_course>', methods=['GET'])
 def route_get_teacher_by_course(teacher_course):
@@ -136,6 +140,12 @@ def route_clase_student_name(student_name):
         return update_clase(student_name, clase)
     elif request.method == 'DELETE':
         return delete_clase(student_name)
+
+@app.route('/taught/t/<teacher_name>', methods=['GET'])
+def route_clase_teacher_name(teacher_name):
+    clase = Taught.query.filter_by(teacherName=teacher_name).all()
+    # clase = Taught.query.get_or_404(student_name)
+    return jsonify(clase)
 
 def insert_student(data):
     student = Student(username=data["username"], email=data["email"], password=data["password"])
@@ -157,7 +167,8 @@ def insert_clase(data):
 
 def get_clase_by_name(student_name):
     # Player.query.filter_by(id=3).first()
-    clase = Taught.query.get_or_404(student_name)
+    clase = Taught.query.filter_by(studentName=student_name).all()
+    # clase = Taught.query.get_or_404(student_name)
     return jsonify(clase)
 
 def update_clase(student_name, new_clase):
@@ -180,40 +191,4 @@ def get_teachers():
     teachers = Teacher.query.all()
     return jsonify(teachers)
 
-"""
-
-@app.route('/profesores',methods="GET")
-def mostrar_profes():
-    if request.method=="GET":
-        data=request.get_json()
-        curso=data["Curso"]
-        todos_profesores=Teacher.query.all()
-        #profesores= ?
-        for profesor in todos_profesores:
-            if profesor.course==curso:
-                #add profesor a profesores
-        #return profesores
-
-@app.route("/teacher",methods="GET")
-def mostrar_clases():
-    if request.method=="GET":
-        data=request.get_json()
-        profesor=data[""]
-        clases_all=Taught.query.all()
-        #clases_profesor= ?
-        for clases in clases_all:
-            if clases.teacherName == profesor:
-                #add clases a clases_profesor
-    
-    
-def actualizar_clase():
-    if request.method=="PUT":
-        data=request.get_json()
-        update = data["check"]
-        clase=Taught.query.get_or_404(data["id"])
-        clase.check=update
-        db.session.commit()
-    return "clase actualizada"
-            
-    """
 #Terminal: python -m flask --app orm/server run
