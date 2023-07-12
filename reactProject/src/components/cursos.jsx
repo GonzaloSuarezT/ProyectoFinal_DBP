@@ -16,7 +16,10 @@ const App = () => {
 
 const Cursos =() =>{
   const [selectedCourse, setSelectedCourse] = useState(null);
-
+  const [loadingData, setLoadingData] = useState(true);
+  const [serverData, setServerData] = useState([]);
+  const [rows, setRows] = useState([]);
+  
   const [data, setData] = useState({
     fecha: "",
     url: "",
@@ -36,8 +39,12 @@ const Cursos =() =>{
 
   const [selectionModel, setSelectionModel] = useState([]);
 
-  const handleSelectionModelChange = (newSelectionModel) => {
-    setSelectionModel(newSelectionModel);
+  //const handleSelectionModelChange = (newSelectionModel) => {
+  //  setSelectionModel(newSelectionModel);
+  //};
+
+  const handleRowSelection = (params) => {
+    setSelectionModel(params.selectionModel);
   };
 
   const handleSubmit = (e) => {
@@ -47,7 +54,7 @@ const Cursos =() =>{
 
     const selectedRowId = selectionModel[0]; // Suponemos que solo se permite seleccionar una fila
 
-    if (selectedRowId != null) {
+    if (selectedRowId !== undefined && selectedRowId !== null) {
       const selectedRow = rows.find((row) => row.id === selectedRowId);
 
       const userData = {
@@ -74,9 +81,7 @@ const Cursos =() =>{
       setSelectedCourse(selectedCourse);
     }
 
-  const [loadingData, setLoadingData] = useState(true);
-  const [serverData, setServerData] = useState([]);
-  const [rows, setRows] = useState([]);
+
   const columns = [
     { field: "username", headerName: "Teacher", width: 120 },
     { field: "email", headerName: "Email", width: 170 },
@@ -92,14 +97,11 @@ const Cursos =() =>{
 
 async function getData(course) {
   setLoadingData(true);
-  await axios
-      .get(`http://127.0.0.1:5000/teachers/${course}`)
-      .then((response) => {
-        setServerData(response.data);
-        fillRows(); 
-        setLoadingData(false);
-        handleSubmit();
-      });
+  //await axios
+  const response = await axios.get(`http://127.0.0.1:5000/teachers/${course}`);
+  setServerData(response.data);
+  fillRows(response.data);
+  setLoadingData(false);
 }
 
   function fillRows() {
@@ -156,7 +158,7 @@ async function getData(course) {
       columns={columns}
       checkboxSelection
       selectionModel={selectionModel}
-      onSelectionModelChange={handleSelectionModelChange}
+      onSelectionModelChange={handleRowSelection}
     />
       )}
       {console.log("Server Data:")}
