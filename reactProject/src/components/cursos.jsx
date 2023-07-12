@@ -1,7 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import {  Box, Button, Stack, TextField , ButtonGroup} from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import axios from "axios";
+
+const theme = createTheme();
+
+const App = () => {
+  return (
+    <ThemeProvider theme={theme}>
+      <Cursos />
+    </ThemeProvider>
+  );
+};
 
 const Cursos =() =>{
   const [selectedCourse, setSelectedCourse] = useState(null);
@@ -18,7 +29,7 @@ const Cursos =() =>{
     { field: "username", headerName: "Teacher", width: 120 },
     { field: "email", headerName: "Email", width: 170 },
     { field: "expYears", headerName: "Experience years", width: 150 },
-    { field: "check", headerName: "Choose", width: 70 },
+    { field: "course", headerName: "Subject", width: 120 },
   ];
     
   useEffect(() => {
@@ -47,7 +58,7 @@ async function getData(course) {
         username: serverData[count].username,
         email: serverData[count].email,
         expYears: serverData[count].expYears + " years",
-        check: "filler",
+        course: serverData[count].course,
       };
       rowArray.push(row);
     }
@@ -87,16 +98,36 @@ async function getData(course) {
       {loadingData ? (
         <p>Loading Please Wait...</p>
       ) : (
-        <DataGrid rows={rows} columns={columns}/>
+        <DataGrid rows={rows} columns={columns} checkboxSelection/>
       )}
       {console.log("Server Data:")}
       {console.log(serverData)}
       {console.log("Rows:")}
       {console.log(rows)}
     </>
+    <h3>Set date</h3>
+    <table></table>
+    <TextField
+            id="outlined-basic"
+            variant="outlined"
+            type={"date"}
+          />
+          <h3>Send link</h3>
+        <TextField
+            id="outlined-basic1"
+            label="URL Google Meets"
+            variant="outlined"
+          />
+          <h3>Confirm username</h3>
+        <TextField
+            id="outlined-basic2"
+            label="username"
+            variant="outlined"
+          />
+        <Button>Reservar</Button>
         </Stack>
     </Box>
     );
 };
 
-export default Cursos;
+export default App;
