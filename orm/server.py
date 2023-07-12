@@ -59,14 +59,14 @@ class Teacher(db.Model):
 @dataclass
 class Taught(db.Model):
 
-    fecha: date
+    fecha: str
     url: str
     check: bool
     studentName: str
     teacherName: str
     teacherCourse: str
 
-    fecha = db.Column(db.DateTime, nullable=False)
+    fecha = db.Column(db.String(100), nullable=False)
     url = db.Column(db.String(100), nullable=False)
     check = db.Column(db.Boolean, nullable=False)
     studentName = db.Column(db.String(100), primary_key=True, nullable=False)

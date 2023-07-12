@@ -20,16 +20,16 @@ const Menu_teacher = () => {
     url: "",
     check: false,
     studentName: "",
-    teacherName: "default",
+    teacherName: "insert",
     teacherCourse: ""
   });
 
   const handleChange = (e) => {
-    const value = e.target.value;
-    setData({
-      ...data,
-      [e.target.name]: value
-    });
+    const { name, value } = e.target;
+    setData((prevData) => ({
+      ...prevData,
+      [name]: value
+    }));
   };
 
   const [loadingData, setLoadingData] = useState(true);
