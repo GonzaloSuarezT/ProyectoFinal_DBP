@@ -4,10 +4,11 @@ import { DataGrid } from '@mui/x-data-grid';
 import axios from "axios";
 
 const Cursos =() =>{
-    const [course, setCourse] = useState("Maths");
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  
     function courseHandler(event) {
-        console.log(course);
-        setCourse(event.target.value);
+      const selectedCourse = event.target.value;
+      setSelectedCourse(selectedCourse);
     }
 
   const [loadingData, setLoadingData] = useState(true);
@@ -21,30 +22,31 @@ const Cursos =() =>{
   ];
     
   useEffect(() => {
-    async function getData() {
-      await axios
-        .get(`http://127.0.0.1:5000/teachers/${course}`)
-        .then((response) => {
-          setServerData(response.data);
-          fillRows(response.data);
-          setLoadingData(false);
-          
-        })
+    if (selectedCourse) {
+        getData(selectedCourse);
     }
-    if (loadingData) {
-      getData();
-    }
-  }, []);
+}, [selectedCourse]);
 
-  function fillRows(responseData) {
+async function getData(course) {
+  setLoadingData(true);
+  await axios
+      .get(`http://127.0.0.1:5000/teachers/${course}`)
+      .then((response) => {
+        setServerData(response.data);
+        fillRows(); // Agregar esta línea para llamar a fillRows() después de establecer los datos del servidor
+        setLoadingData(false);
+      });
+}
+
+  function fillRows() {
     let rowArray = [];
-    for (let count = 0; count < responseData.length; count++) {
+    for (let count = 0; count < serverData.length; count++) {
       let row;
       row = {
         id: count,
-        username: responseData[count].username,
-        email: responseData[count].email,
-        expYears: responseData[count].expYears + " years",
+        username: serverData[count].username,
+        email: serverData[count].email,
+        expYears: serverData[count].expYears + " years",
         check: "filler",
       };
       rowArray.push(row);
@@ -85,7 +87,7 @@ const Cursos =() =>{
       {loadingData ? (
         <p>Loading Please Wait...</p>
       ) : (
-        <DataGrid rows={rows} columns={columns} checkboxSelection />
+        <DataGrid rows={rows} columns={columns}/>
       )}
       {console.log("Server Data:")}
       {console.log(serverData)}
