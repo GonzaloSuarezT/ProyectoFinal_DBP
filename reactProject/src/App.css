@@ -21,11 +21,18 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: rgb(180, 247, 251);
+  color: white;
 }
 
 .App-link {
   color: #61dafb;
+}
+
+body {
+  background-image: url('edu.png');
+  background-size: cover; 
+  background-repeat: no-repeat; 
+  background-attachment: fixed; 
 }
 
 @keyframes App-logo-spin {
