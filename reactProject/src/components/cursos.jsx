@@ -196,7 +196,7 @@ function fillRows() {
             value={data.url}
             onChange={handleChange}
           />
-        <Button type="submit">Reservar</Button>
+        <Button type="submit">Book</Button>
         </form>
         </Stack>
     </Box>
