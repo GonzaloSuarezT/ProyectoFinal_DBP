@@ -3,25 +3,27 @@ import { Box, Button, Stack, TextField, ButtonGroup } from "@mui/material";
 import axios from "axios";
 import { DataGrid } from '@mui/x-data-grid';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import Login from "./Login"
 
 const theme = createTheme();
 
 const App = () => {
+  const [sessionName, setSessionName] = useState(null);
+  //<Login setSessionName={setSessionName} />
   return (
     <ThemeProvider theme={theme}>
-      <Menu_teacher />
+    <Menu_teacher sessionName={sessionName} />
     </ThemeProvider>
   );
 };
 
-const Menu_teacher = () => {
+const Menu_teacher = ({ sessionName }) => {
   const [data, setData] = useState({
-    fecha: "",
-    url: "",
-    check: false,
-    studentName: "",
-    teacherName: "insert",
-    teacherCourse: ""
+    ensenanza_id: 0,
+    estudiante_username: "",
+    clase_aprobada:"",
+    url:"",
+    fecha: ""
   });
 
   const handleChange = (e) => {
@@ -36,18 +38,22 @@ const Menu_teacher = () => {
   const [serverData, setServerData] = useState([]);
   const [rows, setRows] = useState([]);
   const columns = [
-    { field: "studentName", headerName: "Student", width: 120 },
-    { field: "fecha", headerName: "Date", width: 170 },
+    { field: "ensenanza_id", headerName: "ID", width: 100 },
+    { field: "estudiante_username", headerName: "Student", width: 120 },
+    { field: "clase_aprobada", headerName: "Check", width: 120 },
     { field: "url", headerName: "URL", width: 150 },
-    { field: "check", headerName: "Check", width: 120 },
+    { field: "fecha", headerName: "Date", width: 170 },
   ];
 
   useEffect(() => {
     async function getData() {
+      //alert(sessionName);
       setLoadingData(true);
       await axios
-        .get(`http://127.0.0.1:5000/taught/t/${data.teacherName}`)
+        .get(`http://127.0.0.1:5000/taught/t/${sessionName}`)
         .then((response) => {
+          //alert(sessionName);
+          //console(sessionName);
           setServerData(response.data);
           fillRows();
           setLoadingData(false);
@@ -56,70 +62,76 @@ const Menu_teacher = () => {
     if (loadingData) {
       getData();
     }
-  }, [data.teacherName, loadingData]);
+  }, [sessionName, loadingData]);
 
   function fillRows() {
     let rowArray = [];
     for (let count = 0; count < serverData.length; count++) {
-      let row;
-      row = {
-        id: count,
-        studentName: serverData[count].studentName,
-        fecha: serverData[count].fecha,
-        url: serverData[count].url,
-        check: serverData[count].check,
+      let rowData = (serverData[count].toString()).split(",");
+      let row = {
+        ensenanza_id: rowData[0],
+        estudiante_username: rowData[1],
+        clase_aprobada: rowData[2],
+        url: rowData[3],
+        fecha: rowData[4],
       };
       rowArray.push(row);
     }
     setRows(rowArray);
   }
-
+/*
   const handleSubmit = (e) => {
     if (e) {
       e.preventDefault();
     }
     // Resto del código de handleSubmit...
     const userData = {
-        teacherName: data.teacherName,
+        teacherName: sessionName,
       };
   };
-
+*/
   return (
+    
     <Box
-      className="App"
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      minHeight="100vh"
-    >
-      <Stack spacing={4} width={700}>
-        <h1>Menu Teacher</h1>
-        <form onSubmit={handleSubmit}>
-          <h3>Confirm username</h3>
-          <TextField
-            id="outlined-basic"
-            name='teacherName'
-            label="User"
-            variant="outlined"
-            value={data.teacherName}
-            onChange={handleChange}
-          />
-          <Button type="submit" variant="contained">Send</Button>
-        </form>
-
-        <>
-          {loadingData ? (
-            <p>Loading Please Wait...</p>
-          ) : (
-            <DataGrid rows={rows} columns={columns} />
-          )}
-          {console.log("Server Data:")}
-          {console.log(serverData)}
-          {console.log("Rows:")}
-          {console.log(rows)}
-        </>
-      </Stack>
-    </Box>
+    className="App"
+    display="flex"
+    justifyContent="center"
+    alignItems="center"
+    minHeight="100vh"
+  >
+    <Stack spacing={4} width={700}>
+      
+      <h1>Menu Teacher</h1>
+      <>
+          <table>
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Date</th>
+                <th>URL</th>
+                <th>Check</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row) => (
+                <tr key={row.ensenanza_id}>
+                  <td>{row.estudiante_username}</td>
+                  <td>{row.fecha}</td>
+                  <td>{row.url}</td>
+                  <td>{row.clase_aprobada}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        
+        {console.log("Server Data:")}
+        {console.log(serverData)}
+        {console.log("Rows:")}
+        {console.log(rows)}
+      </>
+    </Stack>
+  </Box>
+  
   );
 }
 

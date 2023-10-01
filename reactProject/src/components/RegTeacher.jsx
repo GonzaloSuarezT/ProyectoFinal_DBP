@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import {  Box, Button, Stack, TextField, MenuItem } from "@mui/material";
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 const signatures = [
   {
@@ -31,13 +32,13 @@ const signatures = [
 ];
 
 const RegisterTeacher = () => {
-
+  const navigate = useNavigate();
   const [data, setData] = useState({
     username: "",
     password: "",
     email:"",
-    expYears:0,
-    course:""
+    experiencia:0,
+    curso:""
   });
   
   const handleChange = (e) => {
@@ -54,13 +55,13 @@ const RegisterTeacher = () => {
         username: data.username,
         password: data.password,
         email: data.email,
-        expYears: data.expYears,
-        course: data.course
+        experiencia: data.experiencia,
+        curso: data.curso
       };
       axios.post("http://127.0.0.1:5000/teachers", userData).then((response) => {
         console.log(response.status, response.data.token);
       });
-      window.location.href = "/menu_teacher";
+      navigate('/');
     };
 
     return (
@@ -107,12 +108,12 @@ const RegisterTeacher = () => {
           />
           <h3>Course:</h3>
           <TextField
-          id="outlined-select-course"
+          id="outlined-select-curso"
           select
-          label="Select course"
-          name='course'
+          label="Select curso"
+          name='curso'
           helperText="Please select"
-          value={data.course}
+          value={data.curso}
           onChange={handleChange}
         >
           {signatures.map((option) => (
@@ -124,11 +125,11 @@ const RegisterTeacher = () => {
           <h3>Experience years:</h3>
           <TextField
             id="outlined-basic4"
-            name='expYears'
+            name='experiencia'
             label="Number"
             type='number'
             variant="outlined"
-            value={data.expYears}
+            value={data.experiencia}
             onChange={handleChange}
           />
           <Button type="submit" variant="contained">Register</Button>

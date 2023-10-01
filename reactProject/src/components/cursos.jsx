@@ -3,6 +3,7 @@ import {  Box, Button, Stack, TextField , ButtonGroup} from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import axios from "axios";
+import Login from "./Login"
 
 const theme = createTheme();
 
@@ -14,7 +15,7 @@ const App = () => {
   );
 };
 
-const Cursos =() =>{
+const Cursos =({ sessionName }) =>{
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [loadingData, setLoadingData] = useState(true);
   const [serverData, setServerData] = useState([]);
@@ -22,13 +23,18 @@ const Cursos =() =>{
   
   const [data, setData] = useState({
     fecha: "",
-    url: "",
+    clase_aprobada: "",
     check:false,
-    studentName:"",
-    teacherName:"",
-    teacherCourse:""
+    estudiante_username:"",
+    profesor_username:"",
+    curso:""
   });
 
+  const handleCourseSelection = (course) => {
+    setSelectedCourse(course);
+    getData(course); // Llama a la función para cargar los datos del servidor
+  };
+  
   const handleChange = (e) => {
     const value = e.target.value;
     setData({
@@ -44,6 +50,7 @@ const Cursos =() =>{
   //};
 
   const handleRowSelection = (params) => {
+    console.log("Selected Row IDs:", params.selectionModel);
     setSelectionModel(params.selectionModel);
   };
 
@@ -52,6 +59,7 @@ const Cursos =() =>{
       e.preventDefault();
     }
 
+    //alert(selectionModel)
     const selectedRowId = selectionModel[0]; // Suponemos que solo se permite seleccionar una fila
 
     if (selectedRowId !== undefined && selectedRowId !== null) {
@@ -59,10 +67,9 @@ const Cursos =() =>{
 
       const userData = {
         fecha: data.fecha,
-        url: data.url,
-        studentName: data.studentName,
-        check: true,
-        teacherName: selectedRow.username,
+        clase_aprobada: true,
+        estudiante_username: sessionName,
+        profesor_username: selectedRow.username,
         teacherCourse: selectedRow.course,
       };
 
@@ -85,8 +92,8 @@ const Cursos =() =>{
   const columns = [
     { field: "username", headerName: "Teacher", width: 120 },
     { field: "email", headerName: "Email", width: 170 },
-    { field: "expYears", headerName: "Experience years", width: 150 },
-    { field: "course", headerName: "Subject", width: 120 },
+    { field: "experiencia", headerName: "Experience years", width: 150 },
+    { field: "curso", headerName: "Subject", width: 120 },
   ];
     
   useEffect(() => {
@@ -97,28 +104,30 @@ const Cursos =() =>{
 
 async function getData(course) {
   setLoadingData(true);
-  //await axios
   const response = await axios.get(`http://127.0.0.1:5000/teachers/${course}`);
   setServerData(response.data);
   fillRows(response.data);
   setLoadingData(false);
 }
 
-  function fillRows() {
-    let rowArray = [];
-    for (let count = 0; count < serverData.length; count++) {
-      let row;
-      row = {
-        id: count,
-        username: serverData[count].username,
-        email: serverData[count].email,
-        expYears: serverData[count].expYears + " years",
-        course: serverData[count].course,
-      };
-      rowArray.push(row);
-    }
-    setRows(rowArray);
+
+function fillRows() {
+  let rowArray = [];
+  for (let count = 0; count < serverData.length; count++) {
+    let rowData = (serverData[count].toString()).split(",");
+    let row = {
+      id: count,
+      username: rowData[1],
+      email: rowData[2],
+      experiencia: rowData[3] + " years",
+      curso: rowData[4],
+    };
+    rowArray.push(row);
   }
+  setRows(rowArray);
+  console.log("Updated Rows:", rowArray);
+}
+
 
     return(
         <Box 
@@ -134,18 +143,18 @@ async function getData(course) {
 <div>
 
         <ButtonGroup color="primary" variant="contained" aria-label="outlined primary button group">
-                    <Button value={"Maths"} onClick={courseHandler}>Maths</Button>
-                    <Button value={"Literature"} onClick={courseHandler}>Literature</Button>
+                    <Button value={"Maths"} onClick={() => handleCourseSelection("Maths")}>Maths</Button>
+                    <Button value={"Literature"} onClick={() => handleCourseSelection("Literature")}>Literature</Button>
         </ButtonGroup>
 
         <ButtonGroup color="warning" variant="contained" aria-label="outlined primary button group">
-                <Button value={"History"} onClick={courseHandler}>History</Button>
-                <Button value={"Chemistry"} onClick={courseHandler}>Chemistry</Button>
+                <Button value={"History"} onClick={() => handleCourseSelection("History")}>History</Button>
+                <Button value={"Chemistry"} onClick={() => handleCourseSelection("Chemistry")}>Chemistry</Button>
         </ButtonGroup>
 
         <ButtonGroup color="success" variant="contained" aria-label="outlined primary button group">
-                <Button value={"Physics"} onClick={courseHandler}>Physics</Button>
-                <Button value={"Geography"} onClick={courseHandler}>Geography</Button>
+                <Button value={"Physics"} onClick={() => handleCourseSelection("Physics")}>Physics</Button>
+                <Button value={"Geography"} onClick={() => handleCourseSelection("Geography")}>Geography</Button>
         </ButtonGroup>
         </div>  
         <h3>Available teachers</h3>
@@ -179,19 +188,10 @@ async function getData(course) {
           <h3>Send link</h3>
         <TextField
             id="outlined-basic1"
-            name='url'
+            name='clase_aprobada'
             label="URL Google Meets"
             variant="outlined"
-            value={data.url}
-            onChange={handleChange}
-          />
-          <h3>Confirm username</h3>
-        <TextField
-            id="outlined-basic2"
-            name='studentName'
-            label="username"
-            variant="outlined"
-            value={data.studentName}
+            value={data.clase_aprobada}
             onChange={handleChange}
           />
         <Button type="submit">Reservar</Button>

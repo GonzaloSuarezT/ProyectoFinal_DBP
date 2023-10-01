@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import {  Box, Button, ButtonGroup, Stack, TextField, MenuItem } from "@mui/material";
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 const options = [
   {
@@ -15,19 +16,26 @@ const options = [
 ];
 
 const Login = () => {
-
+  const navigate = useNavigate();
+  const [sessionName, setSessionName] = useState(null);
   const [flag, setFlag] = useState(true);
-
+  
   function flagHandler(event) {
     setFlag(event.target.value);
   }
-
+  
   const [data, setData] = useState({
     username: "",
     password: "",
     email:""
   });
   
+  function handleSessionNameChange(username){
+    // Llama a la función proporcionada por el componente principal para actualizar sessionName
+    // Por ejemplo, si la función se llama setSessionName, puedes hacerlo de esta manera:
+    setSessionName(username);
+  };
+
   const handleChange = (e) => {
     const value = e.target.value;
     setData({
@@ -49,9 +57,13 @@ const Login = () => {
             .get(`http://127.0.0.1:5000/students/get/${userData.username}`)
             .then(data => 
               {
-                console.log(data.data);
-                if ( ((data.data).at(0)).password === userData.password){
-                  window.location.href = "/cursos";
+                var buff = (data.data).toString()
+                var dataArray = buff.split(",");
+                var lastElement = dataArray[dataArray.length - 1];
+                if ( lastElement === userData.password){
+                  handleSessionNameChange(userData.username);
+                  //window.location.href = "/cursos";
+                  navigate('/cursos');
                 }
                 else{
                   alert("Invalid password");
@@ -69,9 +81,13 @@ const Login = () => {
           .get(`http://127.0.0.1:5000/teachers/get/${userData.username}`)
           .then(data => 
             {
-              console.log(data.data);
-              if ( ((data.data).at(0)).password === userData.password){
-                window.location.href = "/menu_teacher";
+              var buff = (data.data).toString()
+              var dataArray = buff.split(",");
+              var lastElement = dataArray[dataArray.length - 1];
+              if ( lastElement === userData.password){
+                handleSessionNameChange(userData.username);
+                //window.location.href = "/menu_teacher";
+                navigate('/menu_teacher');
               }
               else{
                 alert("Invalid password");
@@ -95,6 +111,7 @@ const Login = () => {
 
 
     return (
+      
         <Box 
           className="App"
           display="flex"
@@ -164,6 +181,7 @@ const Login = () => {
 </ButtonGroup>
         </Stack>
       </Box>
+      
     );
 };
 

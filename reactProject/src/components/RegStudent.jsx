@@ -2,9 +2,10 @@ import React, { useEffect } from 'react';
 import {  Box, Button, ButtonGroup ,Stack, TextField } from "@mui/material";
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 const RegisterStudent = () => {
-
+  const navigate = useNavigate();
 const [data, setData] = useState({
   username: "",
   password: "",
@@ -29,7 +30,7 @@ const handleChange = (e) => {
     axios.post("http://127.0.0.1:5000/students", userData).then((response) => {
       console.log(response.status, response.data.token);
     });
-    window.location.href = "/cursos";
+    navigate('/');
   };
     
     /*
