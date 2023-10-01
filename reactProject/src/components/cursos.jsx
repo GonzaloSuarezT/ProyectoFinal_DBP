@@ -5,22 +5,22 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import axios from "axios";
 import { useUser } from './UserContext';
 
-const theme = createTheme();
-
 const App = () => {
   return (
-    <ThemeProvider theme={theme}>
+    <div className="App">
       <Cursos />
-    </ThemeProvider>
+    </div>
   );
 };
 
-const Cursos =({ sessionName }) =>{
+const Cursos =() =>{
   const { user } = useUser();
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [loadingData, setLoadingData] = useState(true);
   const [serverData, setServerData] = useState([]);
+  const [filteredRows, setFilteredRows] = useState([]);
   const [rows, setRows] = useState([]);
+
   
   const [data, setData] = useState({
     fecha: "",
@@ -34,6 +34,9 @@ const Cursos =({ sessionName }) =>{
   const handleCourseSelection = (course) => {
     setSelectedCourse(course);
     getData(course); //Llama a la función para cargar los datos del servidor
+
+    const filteredData = rows.filter((row) => row.curso === course);
+    setFilteredRows(filteredData);
   };
   
   const handleChange = (e) => {
@@ -88,6 +91,7 @@ const Cursos =({ sessionName }) =>{
     if (selectedCourse) {
         getData(selectedCourse);
     }
+    setFilteredRows(rows);
 }, [selectedCourse]);
 
 async function getData(course) {
@@ -96,6 +100,8 @@ async function getData(course) {
   setServerData(response.data);
   fillRows(response.data);
   setLoadingData(false);
+  const filteredData = rows.filter((row) => row.curso === course);
+  setFilteredRows(filteredData);
 }
 
 
@@ -151,7 +157,7 @@ function fillRows() {
         <p>Loading Please Wait...</p>
       ) : (
         <DataGrid
-      rows={rows}
+      rows={filteredRows}
       columns={columns}
       selectionModel={selectionModel}
       onSelectionModelChange={handleRowSelection}
