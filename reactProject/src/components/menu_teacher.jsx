@@ -4,21 +4,23 @@ import axios from "axios";
 import { DataGrid } from '@mui/x-data-grid';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Login from "./Login"
+import { useUser } from './UserContext';
 
 const theme = createTheme();
 
-const App = () => {
-  const [sessionName, setSessionName] = useState(null);
+const App_teacher = () => {
+  //const [sessionName, setSessionName] = useState(null);
   return (
     <ThemeProvider theme={theme}>
-    <Menu_teacher sessionName={sessionName} />
+    <Menu_teacher/>
     </ThemeProvider>
   );
 };
 
 const Menu_teacher = ({ sessionName }) => {
+  const { user } = useUser();
   const [data, setData] = useState({
-    ensenanza_id: 0,
+    ensenanza_id: "",
     estudiante_username: "",
     clase_aprobada:"",
     url:"",
@@ -36,6 +38,14 @@ const Menu_teacher = ({ sessionName }) => {
   const [loadingData, setLoadingData] = useState(true);
   const [serverData, setServerData] = useState([]);
   const [rows, setRows] = useState([]);
+
+  const [selectionModel, setSelectionModel] = useState([]);
+
+  const handleRowSelection = (params) => {
+    console.log("Selected Row IDs:", params.selectionModel);
+    setSelectionModel(params.selectionModel);
+  };
+
   const columns = [
     { field: "ensenanza_id", headerName: "ID", width: 100 },
     { field: "estudiante_username", headerName: "Student", width: 120 },
@@ -46,13 +56,10 @@ const Menu_teacher = ({ sessionName }) => {
 
   useEffect(() => {
     async function getData() {
-      //alert(sessionName);
       setLoadingData(true);
       await axios
-        .get(`http://127.0.0.1:5000/taught/t/${sessionName}`)
+        .get(`http://127.0.0.1:5000/taught/t/${user.username}`)
         .then((response) => {
-          //alert(sessionName);
-          //console(sessionName);
           setServerData(response.data);
           fillRows();
           setLoadingData(false);
@@ -61,28 +68,29 @@ const Menu_teacher = ({ sessionName }) => {
     if (loadingData) {
       getData();
     }
-  }, [sessionName, loadingData]);
+  }, [loadingData]);
 
   function fillRows() {
     let rowArray = [];
     for (let count = 0; count < serverData.length; count++) {
       let rowData = (serverData[count].toString()).split(",");
       let row = {
+        id: count,
         ensenanza_id: rowData[0],
         estudiante_username: rowData[1],
         clase_aprobada: rowData[2],
         url: rowData[3],
-        fecha: rowData[4],
+        fecha: rowData[4]+rowData[5],
       };
       rowArray.push(row);
     }
     setRows(rowArray);
   }
-  
+
   return (
     
     <Box
-    className="App"
+    className="App_teacher"
     display="flex"
     justifyContent="center"
     alignItems="center"
@@ -91,37 +99,28 @@ const Menu_teacher = ({ sessionName }) => {
     <Stack spacing={4} width={700}>
       
       <h1>Menu Teacher</h1>
+      <p>Welcome, {user.username}</p>
       <>
-          <table>
-            <thead>
-              <tr>
-                <th>Student</th>
-                <th>Date</th>
-                <th>URL</th>
-                <th>Check</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((row) => (
-                <tr key={row.ensenanza_id}>
-                  <td>{row.estudiante_username}</td>
-                  <td>{row.fecha}</td>
-                  <td>{row.url}</td>
-                  <td>{row.clase_aprobada}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        
-        {console.log("Server Data:")}
-        {console.log(serverData)}
-        {console.log("Rows:")}
-        {console.log(rows)}
-      </>
+      {loadingData ? (
+        <p>Loading Please Wait...</p>
+      ) : (
+        <DataGrid
+      rows={rows}
+      columns={columns}
+      checkboxSelection
+      selectionModel={selectionModel}
+      onSelectionModelChange={handleRowSelection}
+    />
+      )}
+      {console.log("Server Data:")}
+      {console.log(serverData)}
+      {console.log("Rows:")}
+      {console.log(rows)}
+    </>
     </Stack>
   </Box>
   
   );
 }
 
-export default App;
+export default App_teacher;

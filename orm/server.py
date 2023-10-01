@@ -238,12 +238,21 @@ VALUES (currval(pg_get_serial_sequence('usuario', 'id')), %s, %s);
     return "SUCCESS"
 
 def insert_clase(data):
+    cursor.execute("SELECT id FROM estudiante WHERE usuario_id = (SELECT id FROM usuario WHERE username = %s);", (data["estudiante_username"],))
+    estudiante_id = cursor.fetchone()
+    
+    cursor.execute("SELECT id FROM profesor WHERE usuario_id = (SELECT id FROM usuario WHERE username = %s);", (data["profesor_username"],))
+    profesor_id = cursor.fetchone()
+    
+    if estudiante_id is None or profesor_id is None:
+        return "Error: Estudiante o profesor no encontrado."
+    
     insert_query=sql.SQL("""INSERT INTO ensenanza (estudiante_id, profesor_id, clase_aprobada, url, fecha)
 VALUES (%s, %s, true, %s, %s);
 """)
     cursor.execute(insert_query, (
-        data["estudiante_id"],
-        data["profesor_id"],
+        estudiante_id[0],
+        profesor_id[0],
         data["url"],
         data["fecha"]
     ))

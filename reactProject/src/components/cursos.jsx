@@ -4,6 +4,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import axios from "axios";
 import Login from "./Login"
+import { useUser } from './UserContext';
 
 const theme = createTheme();
 
@@ -16,6 +17,7 @@ const App = () => {
 };
 
 const Cursos =({ sessionName }) =>{
+  const { user } = useUser();
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [loadingData, setLoadingData] = useState(true);
   const [serverData, setServerData] = useState([]);
@@ -55,27 +57,25 @@ const Cursos =({ sessionName }) =>{
       e.preventDefault();
     }
 
-    const selectedRowId = selectionModel[0]; //Suponemos que solo se permite seleccionar una fila
+    //const selectedRowId = selectionModel[0]; //Suponemos que solo se permite seleccionar una fila
 
-    if (selectedRowId !== undefined && selectedRowId !== null) {
-      const selectedRow = rows.find((row) => row.id === selectedRowId);
+    
+      //const selectedRow = rows.find((row) => row.id === selectedRowId);
 
       const userData = {
         fecha: data.fecha,
+        url:data.url,
         clase_aprobada: true,
-        estudiante_username: sessionName,
-        profesor_username: selectedRow.username,
-        teacherCourse: selectedRow.course,
+        estudiante_username: user.username,
+        profesor_username: data.profesor_username,
+        teacherCourse: selectedCourse,
       };
 
       axios.post("http://127.0.0.1:5000/taught", userData).then((response) => {
         console.log(response.status, response.data.token);
       });
       alert("Registered!");
-    } else {
-      console.log(selectedRowId)
-      alert("Please select a teacher.");
-    }
+    
   };
 
     function courseHandler(event) {
@@ -133,6 +133,7 @@ function fillRows() {
         >
 <Stack spacing={4} width={700}>
         <h1>Menu</h1>
+        <p>Welcome, {user.username}</p>
         <h2>Choose subject</h2>
 <div>
 
@@ -159,7 +160,6 @@ function fillRows() {
         <DataGrid
       rows={rows}
       columns={columns}
-      checkboxSelection
       selectionModel={selectionModel}
       onSelectionModelChange={handleRowSelection}
     />
@@ -170,6 +170,15 @@ function fillRows() {
       {console.log(rows)}
     </>
     <form onSubmit={handleSubmit}>
+    <h3>Teacher username</h3>
+    <TextField
+            id="outlined-basic1"
+            name='profesor_username'
+            label="Teacher username"
+            variant="outlined"
+            value={data.profesor_username}
+            onChange={handleChange}
+          />
     <h3>Set date</h3>
     <TextField
             id="outlined-basic"
@@ -182,10 +191,10 @@ function fillRows() {
           <h3>Send link</h3>
         <TextField
             id="outlined-basic1"
-            name='clase_aprobada'
+            name='url'
             label="URL Google Meets"
             variant="outlined"
-            value={data.clase_aprobada}
+            value={data.url}
             onChange={handleChange}
           />
         <Button type="submit">Reservar</Button>

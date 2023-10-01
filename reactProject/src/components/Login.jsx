@@ -3,6 +3,8 @@ import {  Box, Button, ButtonGroup, Stack, TextField, MenuItem } from "@mui/mate
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
+import App_teacher from './menu_teacher';
+import { useUser } from './UserContext';
 
 const options = [
   {
@@ -17,7 +19,8 @@ const options = [
 
 const Login = () => {
   const navigate = useNavigate();
-  const [sessionName, setSessionName] = useState(null);
+  const { setUser } = useUser();
+  const [sessionName, setSessionName] = useState();
   const [flag, setFlag] = useState(true);
   
   function flagHandler(event) {
@@ -30,12 +33,12 @@ const Login = () => {
     email:""
   });
   
-  function handleSessionNameChange(username){
+  /*function handleSessionNameChange(username){
     // Llama a la función proporcionada por el componente principal para actualizar sessionName
     // Por ejemplo, si la función se llama setSessionName, puedes hacerlo de esta manera:
     setSessionName(username);
   };
-
+*/
   const handleChange = (e) => {
     const value = e.target.value;
     setData({
@@ -61,7 +64,11 @@ const Login = () => {
                 var dataArray = buff.split(",");
                 var lastElement = dataArray[dataArray.length - 1];
                 if ( lastElement === userData.password){
-                  handleSessionNameChange(userData.username);
+                  //handleSessionNameChange(userData.username);
+                  setUser({
+                    username: userData.username,
+                    isStudent: true,
+                  });
                   //window.location.href = "/cursos";
                   navigate('/cursos');
                 }
@@ -85,7 +92,12 @@ const Login = () => {
               var dataArray = buff.split(",");
               var lastElement = dataArray[dataArray.length - 1];
               if ( lastElement === userData.password){
-                handleSessionNameChange(userData.username);
+                //handleSessionNameChange(userData.username);
+                setUser({
+                  username: userData.username,
+                  isStudent: false,
+                });
+                
                 //window.location.href = "/menu_teacher";
                 navigate('/menu_teacher');
               }
@@ -100,13 +112,15 @@ const Login = () => {
           });
   };
 
-    if(flag){
-      getStudentData();
+  const authentication = () => {
+    if (flag) {
+      getStudentData(userData);
+    } else {
+      getTeacherData(userData);
     }
-    else{
-      getTeacherData();
-    }
+  };
 
+  authentication();
     };
 
 
@@ -161,10 +175,10 @@ const Login = () => {
             value={data.password}
             onChange={handleChange}
           />
-  
+
           <Button type="submit">login</Button>
           </form>
-
+          
           <p>No account yet? Register as:</p>
           <ButtonGroup variant="contained" aria-label="outlined primary button group">
   <div>
@@ -179,6 +193,7 @@ const Login = () => {
   </a>
   </div>
 </ButtonGroup>
+  {sessionName && <App_teacher sessionName={sessionName} />}
         </Stack>
       </Box>
       
