@@ -32,7 +32,7 @@ const Cursos =({ sessionName }) =>{
 
   const handleCourseSelection = (course) => {
     setSelectedCourse(course);
-    getData(course); // Llama a la función para cargar los datos del servidor
+    getData(course); //Llama a la función para cargar los datos del servidor
   };
   
   const handleChange = (e) => {
@@ -45,10 +45,6 @@ const Cursos =({ sessionName }) =>{
 
   const [selectionModel, setSelectionModel] = useState([]);
 
-  //const handleSelectionModelChange = (newSelectionModel) => {
-  //  setSelectionModel(newSelectionModel);
-  //};
-
   const handleRowSelection = (params) => {
     console.log("Selected Row IDs:", params.selectionModel);
     setSelectionModel(params.selectionModel);
@@ -59,8 +55,7 @@ const Cursos =({ sessionName }) =>{
       e.preventDefault();
     }
 
-    //alert(selectionModel)
-    const selectedRowId = selectionModel[0]; // Suponemos que solo se permite seleccionar una fila
+    const selectedRowId = selectionModel[0]; //Suponemos que solo se permite seleccionar una fila
 
     if (selectedRowId !== undefined && selectedRowId !== null) {
       const selectedRow = rows.find((row) => row.id === selectedRowId);
@@ -127,7 +122,6 @@ function fillRows() {
   setRows(rowArray);
   console.log("Updated Rows:", rowArray);
 }
-
 
     return(
         <Box 

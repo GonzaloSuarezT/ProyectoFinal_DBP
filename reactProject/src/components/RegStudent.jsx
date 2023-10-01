@@ -33,28 +33,6 @@ const handleChange = (e) => {
     navigate('/');
   };
     
-    /*
-    async function hacerConsultaHTTP(params) {
-        await fetch("www.google.com");
-    }
-    return () => {
-        hacerConsultaHTTP()
-    };
-*/
-
-/*
-  function usernameHandler(event) {
-    setUsername(event.target.value);
-  }
-
-  function emailHandler(event) {
-    setEmail(event.target.value);
-  }
-
-  const passwordHandler = (event) => {
-    setPassword(event.target.value);
-  };
-  */
     return (
         <Box 
           className="App"

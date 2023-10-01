@@ -9,7 +9,6 @@ const theme = createTheme();
 
 const App = () => {
   const [sessionName, setSessionName] = useState(null);
-  //<Login setSessionName={setSessionName} />
   return (
     <ThemeProvider theme={theme}>
     <Menu_teacher sessionName={sessionName} />
@@ -79,17 +78,7 @@ const Menu_teacher = ({ sessionName }) => {
     }
     setRows(rowArray);
   }
-/*
-  const handleSubmit = (e) => {
-    if (e) {
-      e.preventDefault();
-    }
-    // Resto del código de handleSubmit...
-    const userData = {
-        teacherName: sessionName,
-      };
-  };
-*/
+  
   return (
     
     <Box

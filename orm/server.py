@@ -9,7 +9,6 @@ from flask_cors import CORS
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:7707lima&gre@localhost/megaprof'
-#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 app.secret_key = 'my_secret_key'
 
