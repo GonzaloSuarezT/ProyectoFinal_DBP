@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Stack } from "@mui/material";
+import { Box, Stack, TextField, Button } from "@mui/material";
 import axios from "axios";
 import { useUser } from './UserContext';
 
@@ -7,6 +7,8 @@ const Menu_teacher = () => {
   const { user } = useUser();
   const [serverData, setServerData] = useState([]);
   const [loadingData, setLoadingData] = useState(true);
+  const [classId, setClassId] = useState(""); //Estado para almacenar el ID de la clase
+  const [updateStatus, setUpdateStatus] = useState(""); //Estado para mostrar el resultado de la actualización
 
   useEffect(() => {
     async function getData() {
@@ -27,6 +29,26 @@ const Menu_teacher = () => {
     return value ? "✔️" : "❌";
   };
 
+  const handleUpdateClaseAprobada = async () => {
+    if (classId) {
+      await axios.put(`http://127.0.0.1:5000/taught/id/${classId}`, {
+        clase_aprobada: false, 
+      });
+
+      const updatedData = serverData.map((rowData) => {
+        if (rowData.id === parseInt(classId, 10)) {
+          return { ...rowData, clase_aprobada: !rowData.clase_aprobada };
+        }
+        return rowData;
+      });
+
+      setServerData(updatedData);
+      setUpdateStatus(`Class with ID ${classId} has been succesfully disabled.`);
+    } else {
+      setUpdateStatus("Please, enter a valid ID class.");
+    }
+  };
+
   return (
     <Box
       className="App_teacher"
@@ -41,6 +63,7 @@ const Menu_teacher = () => {
         {loadingData ? (
           <p>Loading Please Wait...</p>
         ) : (
+          <>
           <table>
             <thead>
               <tr>
@@ -63,6 +86,17 @@ const Menu_teacher = () => {
               ))}
             </tbody>
           </table>
+          <TextField
+              label="Clase ID"
+              variant="outlined"
+              value={classId}
+              onChange={(e) => setClassId(e.target.value)}
+            />
+            <Button variant="contained" onClick={handleUpdateClaseAprobada}>
+              Disable class
+            </Button>
+            <p>{updateStatus}</p>
+          </>
         )}
       </Stack>
     </Box>

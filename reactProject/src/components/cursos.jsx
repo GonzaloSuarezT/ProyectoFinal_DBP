@@ -3,7 +3,6 @@ import {  Box, Button, Stack, TextField , ButtonGroup} from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import axios from "axios";
-import Login from "./Login"
 import { useUser } from './UserContext';
 
 const theme = createTheme();
@@ -77,12 +76,6 @@ const Cursos =({ sessionName }) =>{
       alert("Registered!");
     
   };
-
-    function courseHandler(event) {
-      const selectedCourse = event.target.value;
-      setSelectedCourse(selectedCourse);
-    }
-
 
   const columns = [
     { field: "username", headerName: "Teacher", width: 120 },
