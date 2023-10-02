@@ -14,6 +14,6 @@
      ports:
        - 8000:8003
    web-react:
-     build: ./react
+     build: ./webReact
      ports:
-       - 8080:5000
+       - 8000:3000
