@@ -135,7 +135,7 @@ def insert_clase(data):
     if student is None or teacher is None:
         return "Error: Estudiante o profesor no encontrado."
     
-    lesson = Ensenanza(estudiante_id = student[1],profesor_id=teacher[1],url=data["url"],fecha=data["fecha"],clase_aprobada=False)
+    lesson = Ensenanza(estudiante_id = student[1],profesor_id=teacher[1],url=data["url"],fecha=data["fecha"],clase_aprobada=True)
     db.session.add(lesson)
     db.session.commit()
     return "SUCCESS"

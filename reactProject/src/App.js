@@ -6,6 +6,7 @@ import Login from "./components/Login";
 import RegisterStudent from "./components/RegStudent"
 import RegisterTeacher from "./components/RegTeacher"
 import Cursos from "./components/cursos"
+import BookedClasses from './components/booked_classes';
 import Menu_teacher from "./components/menu_teacher"
 import { useState } from 'react'; // Importa useState
 
@@ -18,6 +19,7 @@ function App() {
         <Route path="/registerstudent" element={<RegisterStudent/>}></Route>
         <Route path="/registerteacher" element={<RegisterTeacher/>}></Route>
         <Route path="/cursos" element={<Cursos/>}></Route>
+        <Route path="/booked_classes" element={<BookedClasses/>}></Route>
         <Route path="/" element={<Login setSessionName={setSessionName} />} /> {/* Pasa setSessionName como prop */}
         <Route
           path="/menu_teacher"

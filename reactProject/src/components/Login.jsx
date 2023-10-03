@@ -57,13 +57,10 @@ const Login = () => {
 
       const getStudentData = () => {
         axios
-            .get(`http://127.0.0.1:5000/students/get/${userData.username}`)
+            .get(`http://127.0.0.1:8001/students/get/${userData.username}`)
             .then(data => 
               {
-                var buff = (data.data).toString()
-                var dataArray = buff.split(",");
-                var lastElement = dataArray[dataArray.length - 1];
-                if ( lastElement === userData.password){
+                if ( data.data["usuario_password"] === userData.password){
                   //handleSessionNameChange(userData.username);
                   setUser({
                     username: userData.username,
@@ -85,13 +82,10 @@ const Login = () => {
 
     const getTeacherData = () => {
       axios
-          .get(`http://127.0.0.1:5000/teachers/get/${userData.username}`)
+          .get(`http://127.0.0.1:8002/teachers/get/${userData.username}`)
           .then(data => 
             {
-              var buff = (data.data).toString()
-              var dataArray = buff.split(",");
-              var lastElement = dataArray[dataArray.length - 1];
-              if ( lastElement === userData.password){
+              if ( data.data["usuario_password"] === userData.password){
                 //handleSessionNameChange(userData.username);
                 setUser({
                   username: userData.username,

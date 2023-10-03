@@ -27,7 +27,7 @@ const handleChange = (e) => {
       password: data.password,
       email: data.email
     };
-    axios.post("http://127.0.0.1:5000/students", userData).then((response) => {
+    axios.post("http://127.0.0.1:8001/students", userData).then((response) => {
       console.log(response.status, response.data.token);
     });
     navigate('/');
