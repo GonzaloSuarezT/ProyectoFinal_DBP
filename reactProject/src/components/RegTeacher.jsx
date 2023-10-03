@@ -58,7 +58,7 @@ const RegisterTeacher = () => {
         experiencia: data.experiencia,
         curso: data.curso
       };
-      axios.post("http://127.0.0.1:5000/teachers", userData).then((response) => {
+      axios.post("http://127.0.0.1:8002/teachers", userData).then((response) => {
         console.log(response.status, response.data.token);
       });
       navigate('/');

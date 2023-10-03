@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {  Box, Button, Stack, TextField , ButtonGroup} from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { useUser } from './UserContext';
 
@@ -14,7 +15,9 @@ const App = () => {
 };
 
 const Cursos =() =>{
+  const navigate = useNavigate();
   const { user } = useUser();
+  const { setUser } = useUser();
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [loadingData, setLoadingData] = useState(true);
   const [serverData, setServerData] = useState([]);
@@ -73,7 +76,7 @@ const Cursos =() =>{
         teacherCourse: selectedCourse,
       };
 
-      axios.post("http://127.0.0.1:5000/taught", userData).then((response) => {
+      axios.post("http://127.0.0.1:8003/taught", userData).then((response) => {
         console.log(response.status, response.data.token);
       });
       alert("Registered!");
@@ -96,7 +99,7 @@ const Cursos =() =>{
 
 async function getData(course) {
   setLoadingData(true);
-  const response = await axios.get(`http://127.0.0.1:5000/teachers/${course}`);
+  const response = await axios.get(`http://127.0.0.1:8002/teachers/${course}`);
   setServerData(response.data);
   fillRows(response.data);
   setLoadingData(false);
@@ -104,17 +107,25 @@ async function getData(course) {
   setFilteredRows(filteredData);
 }
 
+const redirect = () => {
+  setUser({
+    username: user.username,
+    isStudent: true,
+  });
+  //window.location.href = "/cursos";
+  navigate('/booked_classes');
+}
 
 function fillRows() {
   let rowArray = [];
   for (let count = 0; count < serverData.length; count++) {
-    let rowData = (serverData[count].toString()).split(",");
+    //let rowData = (serverData[count].toString()).split(",");
     let row = {
       id: count,
-      username: rowData[1],
-      email: rowData[2],
-      experiencia: rowData[3] + " years",
-      curso: rowData[4],
+      username: serverData[count].usuario_username,
+      email: serverData[count].usuario_email,
+      experiencia: serverData[count].profesor_experiencia + " years",
+      curso: serverData[count].profesor_curso,
     };
     rowArray.push(row);
   }
@@ -198,6 +209,9 @@ function fillRows() {
           />
         <Button type="submit">Book</Button>
         </form>
+        <div>
+  <Button onClick={() => redirect()}>Check booked classes</Button>
+  </div>
         </Stack>
     </Box>
     );

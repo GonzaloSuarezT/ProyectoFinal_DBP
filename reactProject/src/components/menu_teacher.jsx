@@ -10,21 +10,23 @@ const Menu_teacher = () => {
   const [classId, setClassId] = useState(""); //Estado para almacenar el ID de la clase
   const [updateStatus, setUpdateStatus] = useState(""); //Estado para mostrar el resultado de la actualización
   const [deleteStatus, setDeleteStatus] = useState(""); // Estado para mostrar el resultado de la eliminación
+  const [reloadData, setReloadData] = useState(false);
 
   useEffect(() => {
     async function getData() {
       setLoadingData(true);
       await axios
-        .get(`http://127.0.0.1:5000/taught/t/${user.username}`)
+        .get(`http://127.0.0.1:8003/taught/t/${user.username}`)
         .then((response) => {
           setServerData(response.data);
           setLoadingData(false);
+          setReloadData(false); // Establecer a false después de cargar los datos
         });
     }
     if (loadingData) {
       getData();
     }
-  }, [loadingData, user.username]);
+  }, [reloadData, user.username]);
 
   const getCheckIcon = (value) => {
     return value ? "✔️" : "❌";
@@ -32,7 +34,7 @@ const Menu_teacher = () => {
 
   const handleUpdateClaseAprobada = async () => {
     if (classId) {
-      await axios.put(`http://127.0.0.1:5000/taught/id/${classId}`, {
+      await axios.put(`http://127.0.0.1:8003/taught/id/${classId}`, {
         clase_aprobada: false, 
       });
 
@@ -44,6 +46,7 @@ const Menu_teacher = () => {
       });
 
       setServerData(updatedData);
+      setReloadData(true); // Indicar que se deben recargar los datos
       setUpdateStatus(`Class with ID ${classId} has been succesfully disabled.`);
     } else {
       setUpdateStatus("Please, enter a valid ID class.");
@@ -52,11 +55,12 @@ const Menu_teacher = () => {
 
   const handleDeleteClase = async () => {
     if (classId) {
-      await axios.delete(`http://127.0.0.1:5000/taught/id/${classId}`);
+      await axios.delete(`http://127.0.0.1:8003/taught/id/${classId}`);
 
       const updatedData = serverData.filter((rowData) => rowData.id !== parseInt(classId, 10));
 
       setServerData(updatedData);
+      setReloadData(true); // Indicar que se deben recargar los datos
       setDeleteStatus(`Class with ID ${classId} has been successfully deleted.`);
     } else {
       setDeleteStatus("Please, enter a valid class ID.");
@@ -91,11 +95,11 @@ const Menu_teacher = () => {
             <tbody>
               {serverData.map((rowData, index) => (
                 <tr key={index}>
-                  <td>{rowData[0]}</td>
-                  <td>{rowData[1]}</td>
-                  <td>{getCheckIcon(rowData[2])}</td>
-                  <td>{rowData[3]}</td>
-                  <td>{rowData[4]}</td>
+                  <td>{rowData.ensenanza_id}</td>
+                  <td>{rowData.estudiante_username}</td>
+                  <td>{getCheckIcon(rowData.ensenanza_clase_aprobada)}</td>
+                  <td>{rowData.ensenanza_url}</td>
+                  <td>{rowData.ensenanza_fecha}</td>
                 </tr>
               ))}
             </tbody>
